@@ -46,15 +46,21 @@
             const apiUrl = "https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/ganOutput"; // Replace with your API Gateway URL
 
             try {
-                const response = await fetch(apiUrl);
+                const response = await fetch(apiUrl, {
+                    method: "GET", // Ensure the HTTP method matches your API configuration
+                    headers: {
+                        "Content-Type": "application/json", // Optional for GET requests
+                    },
+                });
+
                 if (response.ok) {
-                    const message = await response.text();
-                    document.getElementById("message").innerText = message;
+                    const responseData = await response.json(); // Parse the JSON response
+                    document.getElementById("message").innerText = responseData.body; // Extract and display the "body"
                 } else {
-                    document.getElementById("message").innerText = "Failed to fetch message.";
+                    document.getElementById("message").innerText = `Error: ${response.status} ${response.statusText}`;
                 }
             } catch (error) {
-                document.getElementById("message").innerText = "An error occurred: " + error.message;
+                document.getElementById("message").innerText = `An error occurred: ${error.message}`;
             }
         }
     </script>
