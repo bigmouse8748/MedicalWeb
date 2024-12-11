@@ -43,7 +43,7 @@
 
     <script>
         async function triggerLambda() {
-            const apiUrl = "https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/ganOutput"; // Replace with your API Gateway URL
+            const apiUrl = "https://<your-api-id>.execute-api.<region>.amazonaws.com/<stage>/ganOutput"; // Replace with your API Gateway URL
 
             try {
                 const response = await fetch(apiUrl, {
@@ -55,7 +55,8 @@
 
                 if (response.ok) {
                     const responseData = await response.json(); // Parse the JSON response
-                    document.getElementById("message").innerText = responseData.body; // Extract and display the "body"
+                    const message = responseData.body; // Extract the "body" field
+                    document.getElementById("message").innerText = message; // Display only the message
                 } else {
                     document.getElementById("message").innerText = `Error: ${response.status} ${response.statusText}`;
                 }
