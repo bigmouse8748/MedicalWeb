@@ -63,26 +63,35 @@
 
                 if (response.ok) {
                     const responseData = await response.json();
-                    const resultSerializable = responseData.body.prediction; // Extract "prediction" from the response
+                    console.log("API Response:", responseData); // Debugging the full response
+
+                    // Parse the body (stringified JSON) to extract the "prediction" field
+                    const parsedBody = JSON.parse(responseData.body); // Ensure body is parsed
+                    const predictions = parsedBody.prediction[0]; // Extract the first batch of predictions
+
+                    if (!predictions || predictions.length === 0) {
+                        throw new Error("Prediction field is empty or invalid.");
+                    }
 
                     // Clear existing images
                     const imagesDiv = document.getElementById("images");
                     imagesDiv.innerHTML = "";
 
                     // Iterate through the batch and render images
-                    resultSerializable[0].forEach((imageData, i) => {
-                        const genImage = imageData.map(row => 
+                    predictions.forEach((imageData, i) => {
+                        const normalizedImage = imageData.map(row =>
                             row.map(pixel => Math.round((pixel + 1) * 127.5)) // Normalize [-1, 1] to [0, 255]
                         );
 
-                        // Convert the normalized data to a base64 PNG
+                        // Create a canvas and draw the image
                         const canvas = document.createElement("canvas");
                         const context = canvas.getContext("2d");
-                        canvas.width = genImage[0].length;
-                        canvas.height = genImage.length;
+                        canvas.width = normalizedImage[0].length; // Image width
+                        canvas.height = normalizedImage.length;   // Image height
 
                         const imgData = context.createImageData(canvas.width, canvas.height);
-                        genImage.forEach((row, y) => {
+
+                        normalizedImage.forEach((row, y) => {
                             row.forEach((pixel, x) => {
                                 const index = (y * canvas.width + x) * 4;
                                 imgData.data[index] = pixel;      // R
@@ -94,7 +103,7 @@
 
                         context.putImageData(imgData, 0, 0);
 
-                        // Create an <img> element and add it to the page
+                        // Append the canvas as an <img> element
                         const imgElement = document.createElement("img");
                         imgElement.src = canvas.toDataURL("image/png");
                         imagesDiv.appendChild(imgElement);
