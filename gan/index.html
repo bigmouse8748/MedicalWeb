@@ -64,9 +64,9 @@
 
                     // Parse the body (stringified JSON) to extract the "prediction" field
                     const parsedBody = JSON.parse(responseData.body);
-                    const predictions = parsedBody.prediction[0]; // Extract the first batch of predictions
+                    const prediction = parsedBody.prediction[0]; // Assuming batch size is 1
 
-                    if (!predictions || predictions.length === 0) {
+                    if (!prediction || prediction.length !== 3) {
                         throw new Error("Prediction field is empty or invalid.");
                     }
 
@@ -74,38 +74,41 @@
                     const imagesDiv = document.getElementById("images");
                     imagesDiv.innerHTML = "";
 
-                    // Iterate through the batch and render images
-                    predictions.forEach((imageData, i) => {
-                        // Normalize the pixel values from [-1, 1] to [0, 255]
-                        const height = imageData.length; // Number of rows
-                        const width = imageData[0].length; // Number of columns
-                        const normalizedPixels = imageData.map(row =>
-                            row.map(pixel => Math.round((pixel + 1) * 127.5))
-                        );
+                    // Rearrange the dimensions from (3, 256, 256) to (256, 256, 3)
+                    const height = prediction[0].length;
+                    const width = prediction[0][0].length;
+                    const rearrangedImage = Array.from({ length: height }, (_, y) =>
+                        Array.from({ length: width }, (_, x) => [
+                            Math.round((prediction[0][y][x] + 1) * 127.5), // R
+                            Math.round((prediction[1][y][x] + 1) * 127.5), // G
+                            Math.round((prediction[2][y][x] + 1) * 127.5), // B
+                        ])
+                    );
 
-                        // Create a canvas element
-                        const canvas = document.createElement("canvas");
-                        canvas.width = width; // Set canvas width
-                        canvas.height = height; // Set canvas height
-                        const context = canvas.getContext("2d");
+                    // Create a canvas element
+                    const canvas = document.createElement("canvas");
+                    canvas.width = width;
+                    canvas.height = height;
+                    const context = canvas.getContext("2d");
 
-                        // Create ImageData to draw on the canvas
-                        const imgData = context.createImageData(width, height);
-                        normalizedPixels.forEach((row, y) => {
-                            row.forEach((pixel, x) => {
-                                const index = (y * width + x) * 4;
-                                imgData.data[index] = pixel;      // R
-                                imgData.data[index + 1] = pixel;  // G
-                                imgData.data[index + 2] = pixel;  // B
-                                imgData.data[index + 3] = 255;    // A (fully opaque)
-                            });
+                    // Create ImageData to draw on the canvas
+                    const imgData = context.createImageData(width, height);
+
+                    rearrangedImage.forEach((row, y) => {
+                        row.forEach((pixel, x) => {
+                            const index = (y * width + x) * 4;
+                            imgData.data[index] = pixel[0];     // Red
+                            imgData.data[index + 1] = pixel[1]; // Green
+                            imgData.data[index + 2] = pixel[2]; // Blue
+                            imgData.data[index + 3] = 255;      // Alpha (fully opaque)
                         });
-
-                        context.putImageData(imgData, 0, 0);
-
-                        // Append the canvas to the imagesDiv
-                        imagesDiv.appendChild(canvas);
                     });
+
+                    // Draw the ImageData onto the canvas
+                    context.putImageData(imgData, 0, 0);
+
+                    // Append the canvas to the imagesDiv
+                    imagesDiv.appendChild(canvas);
                 } else {
                     alert(`Error: ${response.status} ${response.statusText}`);
                 }
