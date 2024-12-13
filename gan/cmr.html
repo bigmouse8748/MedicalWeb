@@ -43,13 +43,13 @@
     </style>
 </head>
 <body>
-    <h1>GAN Generated Fake Echocardiogram Image</h1>
+    <h1>GAN Generated Fake CMR Short Axis Image</h1>
     <button onclick="triggerLambda()">Generate</button>
     <div id="images"></div>
 
     <script>
         async function triggerLambda() {
-            const apiUrl = "https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/ganOutput"; // Replace with your API Gateway URL
+            const apiUrl = "https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/gan-output-cmr"; // Replace with your API Gateway URL
 
             try {
                 const response = await fetch(apiUrl, {
