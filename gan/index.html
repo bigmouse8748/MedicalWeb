@@ -61,10 +61,14 @@
 
                 if (response.ok) {
                     const responseData = await response.json();
+                    console.log("Raw Response Data:", responseData); // Log raw response for debugging
 
-                    // Parse the body (stringified JSON) to extract the "prediction" field
+                    // Parse the body
                     const parsedBody = JSON.parse(responseData.body);
-                    const prediction = parsedBody.prediction[0]; // Assuming batch size is 1
+                    console.log("Parsed Body:", parsedBody); // Log parsed body for debugging
+
+                    // Extract the prediction field
+                    const prediction = parsedBody.prediction[0][0]; // Adjusted for deeper nesting
 
                     if (!prediction || prediction.length !== 3) {
                         throw new Error("Prediction field is empty or invalid.");
