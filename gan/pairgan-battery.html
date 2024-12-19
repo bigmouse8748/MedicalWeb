@@ -58,50 +58,48 @@
 
     <script>
         async function triggerLambda() {
-            const apiUrl = "https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/get-gan-battery-test-data"; // Replace with your API Gateway URL
+            const apiUrl = "https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/get-gan-battery-test-data"; // Replace with your actual API Gateway URL
 
             try {
-                // Show loading status
                 const imagesDiv = document.getElementById("images");
                 imagesDiv.innerHTML = "<p>Loading...</p>";
 
-                // Call the API
-                const response = await fetch(apiUrl, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
+                // Fetch the API response
+                const response = await fetch(apiUrl, { method: "GET" });
 
                 if (response.ok) {
-                    const responseData = await response.json();
-                    console.log("Raw Response Data:", responseData);
+                    const rawResponse = await response.json();
+                    console.log("Raw Response:", rawResponse);
 
-                    // Extract data
-                    const base64Image = responseData.image;
-                    const s3Uri = responseData.s3_uri;
-                    const randomImageKey = responseData.randon_image_key;
+                    // Parse the nested JSON in the `body` field
+                    const parsedBody = JSON.parse(rawResponse.body);
+                    console.log("Parsed Body:", parsedBody);
 
-                    // Display the image
+                    // Extract image and metadata
+                    const base64Image = parsedBody.image;
+                    const s3Uri = parsedBody.s3_uri;
+                    const randomImageKey = parsedBody.randon_image_key;
+
+                    // Update the image element
                     const imgElement = document.getElementById("output-image");
                     imgElement.src = `data:image/png;base64,${base64Image}`;
                     imgElement.style.display = "block";
 
-                    // Display metadata
+                    // Update metadata elements
                     document.getElementById("s3-uri").innerText = `S3 URI: ${s3Uri}`;
                     document.getElementById("file-key").innerText = `Random Image Key: ${randomImageKey}`;
 
-                    // Remove loading status
+                    // Clear the loading text
                     imagesDiv.innerHTML = "";
                     imagesDiv.appendChild(imgElement);
                     imagesDiv.appendChild(document.getElementById("s3-uri"));
                     imagesDiv.appendChild(document.getElementById("file-key"));
                 } else {
-                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                    throw new Error(`API error: ${response.status} ${response.statusText}`);
                 }
             } catch (error) {
                 console.error("Error:", error);
-                imagesDiv.innerHTML = `<p style="color: red;">An error occurred: ${error.message}</p>`;
+                document.getElementById("images").innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
             }
         }
     </script>
