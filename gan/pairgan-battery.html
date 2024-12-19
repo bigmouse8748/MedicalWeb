@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PairGAN for Battery Analysis</title>
+    <script>
+        async function loadImage() {
+            // Show loading message
+            const loadingText = document.getElementById("loading-text");
+            loadingText.style.display = "block";
+
+            try {
+                // Call the API Gateway endpoint
+                const response = await fetch("https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/get-gan-battery-test-data");
+                const data = await response.json();
+
+                // Update the image and S3 URI on the page
+                const img = document.getElementById("image-placeholder");
+                img.src = `data:image/png;base64,${data.image}`;
+                img.style.display = "block";
+
+                const uriText = document.getElementById("s3-uri");
+                uriText.textContent = `S3 URI: ${data.s3_uri}`;
+                uriText.style.display = "block";
+            } catch (error) {
+                console.error("Error fetching image:", error);
+                alert("Failed to load the image. Please try again.");
+            } finally {
+                // Hide loading message
+                loadingText.style.display = "none";
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        img {
+            display: none;
+            margin: 20px auto;
+            max-width: 80%;
+            border: 1px solid #ccc;
+        }
+        p {
+            text-align: center;
+            font-size: 1rem;
+            display: none;
+        }
+        #loading-text {
+            text-align: center;
+            font-size: 1rem;
+            color: #555;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>PairGAN for Battery Analysis</h1>
+    <p>
+        PairGAN is a specialized form of Generative Adversarial Networks (GANs) designed to learn paired relationships between input and output data.
+        In the context of battery analysis, PairGAN can be applied to:
+    </p>
+    <ul>
+        <li>Detect defects such as voids, cracks, or delamination in CT scan images of batteries.</li>
+        <li>Enhance the quality of low-resolution scans by generating high-resolution counterparts.</li>
+        <li>Analyze material composition by learning paired relationships between scanned and annotated images.</li>
+    </ul>
+    <p>
+        This page provides insights into how PairGAN can revolutionize battery diagnostics using advanced image processing techniques.
+    </p>
+    <button onclick="loadImage()">Load Test Data</button>
+    <p id="loading-text">Loading, please wait...</p>
+    <img id="image-placeholder" alt="Generated Image">
+    <p id="s3-uri"></p>
+</body>
+</html>
