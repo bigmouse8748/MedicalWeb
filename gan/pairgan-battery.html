@@ -38,10 +38,13 @@
             display: block;
         }
         #gan-image {
-            max-width: 90%; /* Limit the width for better scaling */
-            height: auto;   /* Maintain aspect ratio */
-            margin: 10px auto; /* Center the image */
-            display: block; /* Ensure proper display */
+            max-width: 90%; /* Scale images relative to the container */
+            width: 100%;     /* Ensure all images fill their containers */
+            height: auto;    /* Maintain aspect ratio */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: block;
+            margin: 0 auto;
         }
         .api-images img {
             max-width: 90%;

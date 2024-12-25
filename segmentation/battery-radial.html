@@ -33,11 +33,13 @@
             margin-top: 20px;
         }
         img {
-            max-width: 90%;
-            height: auto;
-            margin: 20px auto;
+            max-width: 90%; /* Scale images relative to the container */
+            width: 100%;     /* Ensure all images fill their containers */
+            height: auto;    /* Maintain aspect ratio */
             border: 1px solid #ccc;
+            border-radius: 5px;
             display: block;
+            margin: 0 auto;
         }
         .button-image-row {
             display: flex;
