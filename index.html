@@ -19,13 +19,10 @@
         .navbar {
             width: 100%;
             background-color: #333;
-            overflow: visible; /* Allow dropdown to extend beyond the navbar */
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 10px 0;
-            position: relative;
-            z-index: 1000; /* Ensure navbar is above other elements */
         }
 
         .navbar .dropdown {
@@ -42,7 +39,6 @@
             text-align: center;
             border-radius: 5px;
             transition: background-color 0.3s ease;
-            line-height: 1.5;
         }
 
         .navbar a:hover {
@@ -52,10 +48,10 @@
         .dropdown-content {
             display: none;
             position: absolute;
-            background-color: rgba(51, 51, 51, 0.95); /* Slightly more opaque background */
+            background-color: #444;
             min-width: 160px;
             box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 2000; /* Ensure dropdown is above other elements */
+            z-index: 1;
         }
 
         .dropdown-content a {
@@ -72,45 +68,46 @@
 
         .dropdown:hover .dropdown-content {
             display: block;
-            top: 100%;
-            left: 0; /* Ensure alignment with the dropdown button */
         }
 
         .main-container {
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
             width: 100%;
             max-width: 1200px;
             margin-top: 20px;
         }
 
-        .side-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .image-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
-            width: 20%;
+            margin-bottom: 20px;
         }
 
-        .side-column img {
-            width: 100%;
+        .image-grid img {
+            width: 300px;
             height: auto;
             border: 1px solid #ccc;
             border-radius: 5px;
+            display: block;
+            margin: 0 auto;
         }
 
-        .side-column button {
+        .image-grid button {
             padding: 10px 15px;
-            font-size: 14px;
+            font-size: 18px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            display: block;
+            margin: 10px auto 0;
         }
 
-        .side-column button:hover {
+        .image-grid button:hover {
             background-color: #0056b3;
         }
 
@@ -139,48 +136,50 @@
         <div class="dropdown">
             <a href="#">Echocardiogram</a>
             <div class="dropdown-content">
-                <a href="gan/echo.html">GAN</a>
+                <a href="./gan/echo.html">GAN</a>
             </div>
         </div>
         <div class="dropdown">
             <a href="#">CMR</a>
             <div class="dropdown-content">
-                <a href="gan/cmr.html">GAN</a>
+                <a href="./gan/cmr.html">GAN</a>
             </div>
         </div>
         <div class="dropdown">
             <a href="#">Battery</a>
             <div class="dropdown-content">
-                <a href="gan/pairgan-battery.html">PairGAN-Battery</a>
-                <a href="segmentation/battery-radial.html">Radial Segmentation</a>
+                <a href="./gan/pairgan-battery.html">PairGAN</a>
+                <a href="./segmentation/battery-radial.html">Radial Segmentation</a>
             </div>
         </div>
-        <a href="about/">About</a>
+        <a href="./about/index.html">About</a>
     </div>
 
     <!-- Main Content -->
     <div class="main-container">
-        <!-- Left Column -->
-        <div class="side-column">
-            <img src="./img/echo.png" alt="Echocardiogram">
-            <button onclick="location.href='./gan/echo.html'">Generate Fake Echocardiogram Image</button>
-
-            <img src="./img/cmr.png" alt="CMR">
-            <button onclick="location.href='./gan/cmr.html'">Generate Fake CMR Image</button>
+        <!-- 2x2 Image Grid -->
+        <div class="image-grid">
+            <div>
+                <img src="./img/echo.png" alt="Echocardiogram">
+                <button onclick="location.href='./gan/echo.html'">Fake Echo</button>
+            </div>
+            <div>
+                <img src="./img/cmr.png" alt="CMR">
+                <button onclick="location.href='./gan/cmr.html'">Fake CMR</button>
+            </div>
+            <div>
+                <img src="./img/pairgan.png" alt="PairGAN">
+                <button onclick="location.href='./gan/pairgan-battery.html'">PairGAN CT Enhancement</button>
+            </div>
+            <div>
+                <img src="./img/radial.png" alt="Radial Segmentation">
+                <button onclick="location.href='./segmentation/battery-radial.html'">Battery Radial Analysis</button>
+            </div>
         </div>
 
         <!-- Main Image -->
         <div class="main-image">
             <img src="./img/cover.png" alt="Cover Image">
-        </div>
-
-        <!-- Right Column -->
-        <div class="side-column">
-            <img src="./img/pairgan.png" alt="PairGAN">
-            <button onclick="location.href='./gan/pairgan-battery.html'">PairGAN Enhanced CT Scan</button>
-
-            <img src="./img/radial.png" alt="Radial Segmentation">
-            <button onclick="location.href='./segmentation/battery-radial.html'">Battery Radial Analysis</button>
         </div>
     </div>
 
