@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battery Cell Radial Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            margin: 20px;
+            background-color: #007bff;
+            color: white;
+            border: 2px solid #0056b3;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #images {
+            margin-top: 20px;
+        }
+        img {
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            display: block;
+        }
+        .button-image-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        .button-image-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        p {
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="location.href='../index.html'" style="position: absolute; top: 10px; left: 10px; padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Back to Main Page</button>
+    <h1>Battery Cell Radial Analysis</h1>
+    <div id="images">
+        <p id="status"></p>
+        <p style="font-size: 18px">There are 500 test cases in total, each click will randomly select one image from the test set.</p>
+        <p style="color: red; font-size: 18px">Click the "Load Test Data" button first to load a test image. Then click the other two buttons to check the results.</p>
+        <div id="image-container" class="api-images">
+            <img src="./img.png" alt="Placeholder Image">
+        </div>
+        <button onclick="triggerLambda()">Load Test Data</button>
+    </div>
+
+    <div id="radial-analysis">
+        <div class="button-image-row">
+            <div class="button-image-column">
+                <img id="cv-image" src="./img.png" alt="CV Analysis Result">
+                <button id="run-cv-button" onclick="showcvImage()" disabled>Run Traditional CV</button>
+            </div>
+            <div class="button-image-column">
+                <img id="unet-image" src="./img.png" alt="U-Net Analysis Result">
+                <button id="run-unet-button" onclick="showUnetImage()" disabled>Run U-net</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let parsedBody = null;
+
+        async function triggerLambda() {
+            const apiUrl = "https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/get-radial-analysis";
+
+            try {
+                const statusElement = document.getElementById("status");
+                statusElement.innerText = "Loading...";
+
+                const response = await fetch(apiUrl, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                });
+
+                if (response.ok) {
+                    const rawResponse = await response.json();
+                    parsedBody = JSON.parse(rawResponse.body);
+
+                    // Update main test image
+                    const base64Image = parsedBody.image;
+                    const imageContainer = document.getElementById("image-container");
+                    imageContainer.innerHTML = `<img src="data:image/png;base64,${base64Image}" alt="Generated Image">`;
+
+                    // Enable the Run buttons
+                    document.getElementById("run-cv-button").disabled = false;
+                    document.getElementById("run-unet-button").disabled = false;
+
+                    statusElement.innerText = "";
+                } else {
+                    throw new Error(`API error: ${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("status").innerText = `Error: ${error.message}`;
+
+                // Reset placeholders
+                const imageContainer = document.getElementById("image-container");
+                imageContainer.innerHTML = `<img src="./img.png" alt="Placeholder Image">`;
+            }
+        }
+
+        function showcvImage() {
+            if (!parsedBody || !parsedBody.cv_image) {
+                alert("Please load test data first.");
+                return;
+            }
+
+            const cvImageElement = document.getElementById("cv-image");
+            cvImageElement.src = `data:image/png;base64,${parsedBody.cv_image}`;
+
+            document.getElementById("run-cv-button").disabled = true;
+        }
+
+        function showUnetImage() {
+            if (!parsedBody || !parsedBody.dl_image) {
+                alert("Please load test data first.");
+                return;
+            }
+
+            const unetImageElement = document.getElementById("unet-image");
+            unetImageElement.src = `data:image/png;base64,${parsedBody.dl_image}`;
+
+            document.getElementById("run-unet-button").disabled = true;
+
+            // Add the sentence above the U-Net image
+            const unetImageColumn = unetImageElement.parentElement;
+            let messageElement = document.getElementById("unet-message");
+            if (!messageElement) {
+                messageElement = document.createElement("p");
+                messageElement.id = "unet-message";
+                messageElement.style.color = "red";
+                messageElement.style.fontSize = "18px";
+                unetImageColumn.insertBefore(messageElement, unetImageElement);
+            }
+            messageElement.innerText = "The boundary of the U-Net results may appear jagged due to resizing the mask from a smaller size to a larger one.";
+        }
+    </script>
+</body>
+</html>

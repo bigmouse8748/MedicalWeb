@@ -76,29 +76,54 @@
             left: 0; /* Ensure alignment with the dropdown button */
         }
 
-        .cover-container {
-            position: relative;
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
             width: 100%;
-            max-width: 800px;
-            text-align: center;
+            max-width: 1200px;
             margin-top: 20px;
-            z-index: 1;
         }
 
-        .cover-container img {
+        .side-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 20%;
+        }
+
+        .side-column img {
             width: 100%;
             height: auto;
-            display: block;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
-        .title {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .side-column button {
+            padding: 10px 15px;
+            font-size: 14px;
+            background-color: #007bff;
             color: white;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-            font-size: 2.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .side-column button:hover {
+            background-color: #0056b3;
+        }
+
+        .main-image {
+            width: 60%;
+            text-align: center;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
         footer {
@@ -112,21 +137,51 @@
     <!-- Navigation Bar -->
     <div class="navbar">
         <div class="dropdown">
-            <a href="#">GAN</a>
+            <a href="#">Echocardiogram</a>
             <div class="dropdown-content">
-                <a href="gan/index.html">Echo</a>
-                <a href="gan/cmr.html">CMR</a>
-                <a href="gan/pairgan-battery.html">PairGAN-Battery</a> <!-- New Link -->
+                <a href="gan/echo.html">GAN</a>
             </div>
         </div>
-        <a href="unet/">Unet</a>
+        <div class="dropdown">
+            <a href="#">CMR</a>
+            <div class="dropdown-content">
+                <a href="gan/cmr.html">GAN</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="#">Battery</a>
+            <div class="dropdown-content">
+                <a href="gan/pairgan-battery.html">PairGAN-Battery</a>
+                <a href="segmentation/battery-radial.html">Radial Segmentation</a>
+            </div>
+        </div>
         <a href="about/">About</a>
     </div>
 
-    <!-- Cover Section -->
-    <div class="cover-container">
-        <img src="./img/cover.png" alt="Cover Image">
-        <div class="title">Welcome to My Website</div>
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Left Column -->
+        <div class="side-column">
+            <img src="./img/echo.png" alt="Echocardiogram">
+            <button onclick="location.href='./gan/echo.html'">Generate Fake Echocardiogram Image</button>
+
+            <img src="./img/cmr.png" alt="CMR">
+            <button onclick="location.href='./gan/cmr.html'">Generate Fake CMR Image</button>
+        </div>
+
+        <!-- Main Image -->
+        <div class="main-image">
+            <img src="./img/cover.png" alt="Cover Image">
+        </div>
+
+        <!-- Right Column -->
+        <div class="side-column">
+            <img src="./img/pairgan.png" alt="PairGAN">
+            <button onclick="location.href='./gan/pairgan-battery.html'">PairGAN Enhanced CT Scan</button>
+
+            <img src="./img/radial.png" alt="Radial Segmentation">
+            <button onclick="location.href='./segmentation/battery-radial.html'">Battery Radial Analysis</button>
+        </div>
     </div>
 
     <!-- Footer -->
