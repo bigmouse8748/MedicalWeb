@@ -65,45 +65,30 @@
         <button onclick="location.href='../index.html'" style="padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Back to Main Page</button>
     </div>    <h1>Battery Cell Radial Analysis</h1>
     <div id="images">
-        <p id="status"; style="color: rgb(15, 11, 224); font-size: 16px"></p>
+        <p id="status"></p>
         <p style="font-size: 18px">There are 500 test cases in total, each click will randomly select one image from the test set.</p>
         <p style="color: red; font-size: 18px">Click the "Load Test Data" button first to load a test image. Then click the other two buttons to check the results.</p>
         <div id="image-container" class="api-images">
             <img src="./img.png" alt="Placeholder Image">
         </div>
         <button onclick="triggerLambda()">Load Test Data</button>
-        <p id="selectedImageKey"></p>
     </div>
 
-    <div id="cv-images">
+    <div id="radial-analysis">
         <div class="button-image-row">
             <div class="button-image-column">
                 <img id="cv-image" src="./img.png" alt="CV Analysis Result">
                 <button id="run-cv-button" onclick="showcvImage()" disabled>Run Traditional CV</button>
             </div>
-        </div>  
-    </div>
-    
-    <div id="radial-analysis">
-        <p style="color: red; font-size: 16px">Patient..The Unet Patch model is running in a container deployed in AWS Lambda.</p>
-        <p style="color: red; font-size: 16px">It may take up to 2 minutes to get the U-net-Patch results.</p>
-        <p id="status-patch"; style="color: rgb(15, 11, 224); font-size: 16px"></p>
-        <div class="button-image-row">
-            
             <div class="button-image-column">
                 <img id="unet-image" src="./img.png" alt="U-Net Analysis Result">
-                <button id="run-unet-button" onclick="showUnetImage()" disabled>Run U-net-Full</button>
-            </div>
-            <div class="button-image-column">
-                <img id="patch-image" src="./img.png" alt="patch Analysis Result">
-                <button id="run-patch-button" onclick="showpatchImage()" disabled>Run U-net-Patch</button>
+                <button id="run-unet-button" onclick="showUnetImage()" disabled>Run U-net</button>
             </div>
         </div>
     </div>
 
     <script>
         let parsedBody = null;
-        let parsedBodyPatch = null;
 
         async function triggerLambda() {
             const apiUrl = "https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/get-radial-analysis";
@@ -129,12 +114,8 @@
                     // Enable the Run buttons
                     document.getElementById("run-cv-button").disabled = false;
                     document.getElementById("run-unet-button").disabled = false;
-                    document.getElementById("run-patch-button").disabled = false;
 
                     statusElement.innerText = "";
-                    const s3Key = parsedBody.s3_key;
-                    document.getElementById('selectedImageKey').innerText = s3Key;
-
                 } else {
                     throw new Error(`API error: ${response.status} ${response.statusText}`);
                 }
@@ -158,60 +139,6 @@
             cvImageElement.src = `data:image/png;base64,${parsedBody.cv_image}`;
 
             document.getElementById("run-cv-button").disabled = true;
-        }
-
-        async function showpatchImage() {
-            console.log("Starting showpatchImage function...");
-            document.getElementById("run-patch-button").disabled = true;
-
-            const apiUrlPatch = "https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/get-radial-analysis-patch";
-            const statusElementPatch = document.getElementById("status-patch");   
-            statusElementPatch.innerText = "Loading...";
-            const s3Key = document.getElementById("selectedImageKey").innerText.trim();
-            if (!s3Key) {
-                            statusElement.innerText = "Error: Missing or invalid S3 key.";
-                            document.getElementById("run-patch-button").disabled = false;
-                            return;
-                        }
-
-            try {
-                console.log("Sending API request to:", apiUrlPatch);
-
-                const responsePatch = await fetch(apiUrlPatch, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({"body":{"s3_key": s3Key}})
-                });
-                console.log("Response status:", responsePatch.status);
-
-                if (responsePatch.ok) {
-                    const rawResponsePatch = await responsePatch.json();
-                    parsedBodyPatch = JSON.parse(rawResponsePatch.body);
-
-                    // Update main test image
-                    // const base64ImagePatch = parsedBodyPatch.unet_image;
-                    const imageContainerPatch = document.getElementById("patch-image");
-                    imageContainerPatch.src = `data:image/png;base64,${parsedBodyPatch.unet_image}`;
-                    // imageContainerPatch.innerHTML = `<img src="data:image/png;base64,${parsedBodyPatch.unet_image}" alt="Patch Image">`;
-
-                    statusElementPatch.innerText = "";
-               
-                } else {
-                    throw new Error(`API error: ${responsePatch.status} ${responsePatch.statusText}`);
-                }
-            } catch (error) {
-                console.error("Error:", error);
-                document.getElementById("status").innerText = `Error: ${error.message}`;
-
-                // Reset placeholders
-                const imageContainerPatch = document.getElementById("patch-image");
-                imageContainerPatch.innerHTML = `<img src="./img.png" alt="Placeholder Image">`;
-            }
-
-            // const cvImageElement = document.getElementById("patch-image");
-            // cvImageElement.src = `data:image/png;base64,${parsedBody.unet_image}`;
-
-            
         }
 
         function showUnetImage() {
@@ -240,5 +167,3 @@
     </script>
 </body>
 </html>
-
-
