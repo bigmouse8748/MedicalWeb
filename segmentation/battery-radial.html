@@ -65,14 +65,18 @@
         <button onclick="location.href='../index.html'" style="padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Back to Main Page</button>
     </div>    <h1>Battery Cell Radial Analysis</h1>
     <div id="images">
-        <p id="status"; style="color: rgb(15, 11, 224); font-size: 16px"></p>
-        <p style="font-size: 18px">There are 500 test cases in total, each click will randomly select one image from the test set.</p>
-        <p style="color: red; font-size: 18px">Click the "Load Test Data" button first to load a test image. Then click the other two buttons to check the results.</p>
-        <div id="image-container" class="api-images">
-            <img src="./img.png" alt="Placeholder Image">
+        <div class="button-image-row">
+            <div class="button-image-column">
+                <p id="status"; style="color: rgb(15, 11, 224); font-size: 16px"></p>
+                <p style="font-size: 18px">There are 500 test cases in total, each click will randomly select one image from the test set.</p>
+                <p style="color: red; font-size: 18px">Click the "Load Test Data" button first to load a test image. Then click the other three buttons to check the results.</p>
+                <div id="image-container" class="api-images">
+                    <img src="./img.png" alt="Placeholder Image">
+                </div>
+                <button onclick="triggerLambda()">Load Test Data</button>
+                <p id="selectedImageKey"></p>
+            </div>
         </div>
-        <button onclick="triggerLambda()">Load Test Data</button>
-        <p id="selectedImageKey"></p>
     </div>
 
     <div id="cv-images">
