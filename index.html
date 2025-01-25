@@ -150,7 +150,8 @@
             <a href="#">Battery</a>
             <div class="dropdown-content">
                 <a href="./gan/pairgan-battery.html">PairGAN</a>
-                <a href="./segmentation/battery-radial.html">Radial Segmentation</a>
+                <a href="./segmentation/battery-radial.html">Radial Analysis</a>
+                <a href="./segmentation/battery-axial.html">Axial Analysis</a>
             </div>
         </div>
         <a href="./about/index.html">About</a>
@@ -159,7 +160,7 @@
     <!-- Main Content -->
     <div class="main-container">
         <!-- 2x2 Image Grid -->
-        <div class="image-grid">
+        <div class="image-grid" style="grid-template-columns: repeat(3, 1fr);">
             <div>
                 <img src="./img/echo.png" alt="Echocardiogram">
                 <button onclick="location.href='./gan/echo.html'">Fake Echo</button>
@@ -172,9 +173,17 @@
                 <img src="./img/pairgan.png" alt="PairGAN">
                 <button onclick="location.href='./gan/pairgan-battery.html'">PairGAN CT Enhancement</button>
             </div>
+        </div>
+    
+        <!-- Second Row: 2 Image-Button Pairs -->
+        <div class="image-grid" style="grid-template-columns: repeat(2, 1fr);">
             <div>
                 <img src="./img/radial.png" alt="Radial Segmentation">
                 <button onclick="location.href='./segmentation/battery-radial.html'">Battery Radial Analysis</button>
+            </div>
+            <div>
+                <img src="./img/axial.png" alt="Another Analysis">
+                <button onclick="location.href='./segmentation/battery-axial.html'">Battery Axial Analysis</button>
             </div>
         </div>
 

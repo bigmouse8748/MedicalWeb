@@ -57,6 +57,16 @@
             font-size: 14px;
             color: #333;
         }
+        .workflow-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .workflow-container img {
+            max-width: 30%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -103,6 +113,11 @@
                 <button id="run-patch-button" onclick="showpatchImage()" disabled>Run U-net-Patch</button>
             </div>
         </div>
+    </div>
+
+    <div class="workflow-container">
+        <h2>Workflow</h2>
+        <img src="./radial-workflow.png" alt="Axial Workflow">
     </div>
 
     <script>

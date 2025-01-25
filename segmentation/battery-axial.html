@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battery Axial Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10;
+            margin-bottom: 20px; /* Add spacing below the button */
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        h1 {
+            margin-top: 70px; /* Ensure proper spacing from the button */
+            font-size: 28px;
+            color: #333;
+        }
+        .buttons-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .browse-button, .analysis-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .browse-button:hover, .analysis-button:hover {
+            background-color: #0056b3;
+        }
+        .browse-button:disabled, .analysis-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .prefix-container {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 200px;
+            width: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f9f9f9;
+            text-align: left;
+        }
+        .prefix-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        .prefix-list li {
+            margin: 5px 0;
+        }
+        .prefix-list li button {
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+        }
+        .prefix-list li button:hover {
+            background-color: #218838;
+        }
+        .selected-key {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+            font-style: italic;
+        }
+        .images-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .image-container {
+            text-align: center;
+        }
+        .image-container img {
+            max-width: 600px;
+            max-height: 800px;
+            width: auto;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .workflow-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .workflow-container img {
+            max-width: 50%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Back to Main Page Button -->
+    <button class="back-button" onclick="location.href='../index.html'">Back to Main Page</button>
+    <h1>Battery Axial Analysis</h1>
+    <p style="font-size: 12px">Click the "Browse S3 Bucket" button to get the list of test images. After the test image is loaded, click the "Show Result" button to review the results.</p>
+    <p style="color: red; font-size: 12px">If the analysis has not been performed, it will trigger the ECS on AWS to run the analysis.</p>
+    <p style="color: red; font-size: 12px">The analysis may take several minutes to finish as the computational power is low for experimental phase.</p>
+    <div class="prefix-container">
+        <ul class="prefix-list" id="prefixList"></ul>
+    </div>
+    <div class="selected-key" id="selectedKey">No object selected</div>
+    <div class="buttons-container">
+        <button class="browse-button" id="browseButton" onclick="fetchPrefixes()">Browse S3 Bucket</button>
+        <button class="analysis-button" id="analysisButton" onclick="startAnalysis()" disabled>Show Result</button>
+    </div>
+    <p style="color: red; font-size: 12px">The result might not be perfect as it is still under development</p>
+    <div class="images-row">
+        
+        <div class="image-container">
+            <p>Current Image</p>
+            <img src="./img.png" id="currentImage" alt="Current Image Placeholder">
+        </div>
+        <div class="image-container">
+            <p>Analysis Result</p>
+            <img src="./img.png" id="analysisResult" alt="Analysis Result Placeholder">
+        </div>
+    </div>
+    <!-- Workflow Image -->
+    <div class="workflow-container">
+        <h2>Workflow</h2>
+        <img src="./axial-workflow.png" alt="Axial Workflow">
+    </div>
+
+    <script>
+        const apiUrl = 'https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/get-axial-data-list';
+        const imageApiUrl = 'https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/decode-selected-axial-image';
+        const analysisApiUrl = 'https://8mmd170j86.execute-api.us-east-1.amazonaws.com/staging/start-axial-analysis';
+
+        let selectedKey = null;
+
+        function fetchPrefixes() {
+            const browseButton = document.getElementById('browseButton');
+            const prefixList = document.getElementById('prefixList');
+            const analysisButton = document.getElementById('analysisButton');
+
+            browseButton.disabled = true; // Disable Browse S3 Bucket button
+            prefixList.innerHTML = ''; // Clear existing list
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.body) {
+                        data = JSON.parse(data.body);
+                    }
+
+                    if (!Array.isArray(data) || data.length === 0) {
+                        prefixList.innerHTML = '<li>No objects found in the specified folder.</li>';
+                        return;
+                    }
+
+                    data.forEach(item => {
+                        const li = document.createElement('li');
+                        const button = document.createElement('button');
+                        button.textContent = item.Key;
+                        button.onclick = () => fetchImage(item.Key);
+                        li.appendChild(button);
+                        prefixList.appendChild(li);
+                    });
+
+                    // Keep the Start Analysis button disabled until an item is selected
+                    analysisButton.disabled = true;
+                })
+                .catch(error => {
+                    console.error('Error fetching prefixes:', error);
+                    alert('Failed to fetch prefixes. Check console for details.');
+                    browseButton.disabled = false; // Re-enable Browse S3 Bucket if there's an error
+                });
+        }
+
+        async function fetchImage(key) {
+            const currentImage = document.getElementById('currentImage');
+            const selectedKeyElement = document.getElementById('selectedKey');
+            const analysisButton = document.getElementById('analysisButton');
+            console.log("Fetching image for key:", key);
+
+            const response = await fetch(imageApiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ body: JSON.stringify({ s3_key: key }) })
+            });
+
+            if (response.ok) {
+                const rawResponse = await response.json();
+                const parsedBody = JSON.parse(rawResponse.body);
+                const base64Image = parsedBody.image;
+                currentImage.src = `data:image/png;base64,${base64Image}`;
+                selectedKey = key;
+                selectedKeyElement.innerText = `Selected Object Key: ${key}`;
+                analysisButton.disabled = false; // Enable Start Analysis button
+            } else {
+                console.error(`Error fetching image: ${response.statusText}`);
+            }
+        }
+
+        async function startAnalysis() {
+            if (!selectedKey) {
+                alert('Please select an image from the list before starting the analysis.');
+                return;
+            }
+
+            const analysisButton = document.getElementById('analysisButton');
+            const browseButton = document.getElementById('browseButton');
+            const prefixListButtons = document.querySelectorAll('.prefix-list li button');
+            const analysisResult = document.getElementById('analysisResult');
+
+            // Disable buttons and list items during analysis
+            analysisButton.disabled = true;
+            browseButton.disabled = true;
+            prefixListButtons.forEach(button => (button.disabled = true));
+
+            try {
+                const response = await fetch(analysisApiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ body: JSON.stringify({ s3_key: selectedKey }) })
+                });
+
+                const data = await response.json();
+                console.log(data);
+                const parsedBody = JSON.parse(data.body);
+
+                if (parsedBody.image) {
+                    // Show the result image if returned
+                    analysisResult.src = `data:image/png;base64,${parsedBody.image}`;
+                } else {
+                    alert('No result yet. Analysis initialized, please check later.');
+                }
+            } catch (error) {
+                console.error('Error starting analysis:', error);
+                alert('Failed to start analysis. Check console for details.');
+            } finally {
+                // Re-enable buttons and list items after analysis
+                browseButton.disabled = false;
+                prefixListButtons.forEach(button => (button.disabled = false));
+            }
+        }
+
+    </script>
+</body>
+</html>
