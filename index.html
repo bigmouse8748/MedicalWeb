@@ -15,7 +15,22 @@
             min-height: 100vh;
             background-color: #f4f4f4;
         }
+        .introduction {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
+        .introduction h1 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .introduction p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
         .navbar {
             width: 100%;
             background-color: #333;
@@ -153,7 +168,7 @@
             </div>
         </div>
         <div class="dropdown">
-            <a href="#">Battery</a>
+            <a href="#">Battery-CT</a>
             <div class="dropdown-content">
                 <a href="./gan/pairgan-battery.html">PairGAN</a>
                 <a href="./segmentation/battery-radial.html">Radial Analysis</a>
@@ -165,6 +180,15 @@
 
     <!-- Main Content -->
     <div class="main-container">
+        <!-- Introduction Section -->
+        <section class="introduction">
+            <h1>Exploring AI for Image Processing</h1>
+            <p>
+                This platform serves as a proof-of-concept for applying artificial intelligence to various image processing tasks. 
+                Our experiments explore AI-driven approaches for analyzing and enhancing different types of images, including medical imaging, scientific visualizations, and other domains. 
+                The goal is to investigate potential applications of AI in image segmentation, enhancement, and pattern recognition.
+            </p>
+        </section>
         <!-- 2x2 Image Grid -->
         <div class="image-grid" style="grid-template-columns: repeat(2, 1fr);">
             <div>
