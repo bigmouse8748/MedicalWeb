@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI for Medical Images</title>
+    <title>AI for Computer Vision Tasks</title>
     <style>
         body {
             margin: 0;
@@ -43,6 +43,11 @@
 
         .navbar a:hover {
             background-color: #575757;
+        }
+
+        .navbar .home-button {
+            margin-right: 20px; /* Space between Home and other items */
+            font-weight: bold; /* Optional: Make it stand out */
         }
 
         .dropdown-content {
@@ -134,16 +139,17 @@
 <body>
     <!-- Navigation Bar -->
     <div class="navbar">
+        <a href="./index.html" class="home-button">Home</a>
         <div class="dropdown">
             <a href="#">Echocardiogram</a>
             <div class="dropdown-content">
-                <a href="./gan/echo.html">GAN</a>
+                <a href="./gan/gan.html">GAN</a>
             </div>
         </div>
         <div class="dropdown">
             <a href="#">CMR</a>
             <div class="dropdown-content">
-                <a href="./gan/cmr.html">GAN</a>
+                <a href="./gan/gan.html">GAN</a>
             </div>
         </div>
         <div class="dropdown">
@@ -160,15 +166,15 @@
     <!-- Main Content -->
     <div class="main-container">
         <!-- 2x2 Image Grid -->
-        <div class="image-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="image-grid" style="grid-template-columns: repeat(2, 1fr);">
             <div>
                 <img src="./img/echo.png" alt="Echocardiogram">
-                <button onclick="location.href='./gan/echo.html'">Fake Echo</button>
+                <button onclick="location.href='./gan/echo.html'">GAN Medical</button>
             </div>
-            <div>
+            <!-- <div>
                 <img src="./img/cmr.png" alt="CMR">
                 <button onclick="location.href='./gan/cmr.html'">Fake CMR</button>
-            </div>
+            </div> -->
             <div>
                 <img src="./img/pairgan.png" alt="PairGAN">
                 <button onclick="location.href='./gan/pairgan-battery.html'">PairGAN CT Enhancement</button>
