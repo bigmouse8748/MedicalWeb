@@ -4,137 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f4f4f4;
-        }
-        .navbar {
-            width: 100%;
-            background-color: #060e11;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px 0;
-        }
-
-        .navbar .dropdown {
-            position: relative;
-            display: inline-block;
-            margin: 0 10px;
-        }
-
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            padding: 14px 20px;
-            font-size: 1rem;
-            text-align: center;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .navbar a:hover {
-            background-color: #575757;
-        }
-
-        .navbar .home-button {
-            margin-right: 20px; /* Space between Home and other items */
-            font-weight: bold; /* Optional: Make it stand out */
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #444;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content a {
-            color: white;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #575757;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        .about-container {
-            max-width: 800px;
-            margin: 50px auto;
-            text-align: center;
-        }
-
-        .about-container h1 {
-            font-size: 2.5rem;
-            color: #333;
-        }
-
-        .about-container p {
-            font-size: 1.2rem;
-            color: #666;
-            line-height: 1.6;
-        }
-        h1 {
-            color: #333;
-        }
-    </style>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <div class="navbar">
-        <a href="../index.html" class="home-button">Home</a>
-        <div class="dropdown">
-            <a href="#">Echocardiogram</a>
-            <div class="dropdown-content">
-                <a href="../gan/gan.html">GAN</a>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="../index.html" class="home-button">Home</a>
+            <div class="dropdown">
+                <a href="#">Echocardiogram</a>
+                <div class="dropdown-content">
+                    <a href="../gan/gan.html">GAN</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <a href="#">CMR</a>
-            <div class="dropdown-content">
-                <a href="../gan/gan.html">GAN</a>
+            <div class="dropdown">
+                <a href="#">CMR</a>
+                <div class="dropdown-content">
+                    <a href="../gan/gan.html">GAN</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <a href="#">Battery-CT</a>
-            <div class="dropdown-content">
-                <a href="../gan/pairgan-battery.html">PairGAN</a>
-                <a href="../segmentation/battery-radial.html">Radial Analysis</a>
-                <a href="../segmentation/battery-axial.html">Axial Analysis</a>
+            <div class="dropdown">
+                <a href="#">Battery-CT</a>
+                <div class="dropdown-content">
+                    <a href="../gan/pairgan-battery.html">PairGAN</a>
+                    <a href="../segmentation/battery-radial.html">Radial Analysis</a>
+                    <a href="../segmentation/battery-axial.html">Axial Analysis</a>
+                </div>
             </div>
+            <a href="./index.html">About</a>
         </div>
-        <a href="./index.html">About</a>
-    </div>
-        <!-- About Content -->
-    <div class="about-container">
-        <h1>About This Project</h1>
-        <p>
-            This platform is a proof-of-concept exploring the applications of artificial intelligence in image processing. 
-            The project investigates AI-driven techniques for analyzing and enhancing various types of images, including medical imaging, scientific visualizations, and general image-based data.  
-        </p>
-        <p>
-            The primary objective is to experiment with different AI models, evaluate their potential impact, and understand their limitations in real-world applications. 
-            While this is not a production-ready tool, it serves as a research initiative to explore the feasibility of AI in image analysis.
-        </p>
-        <p>
-            If you have any questions or would like to discuss collaborations, feel free to reach out at:  
-            <strong><a href="mailto:haozhouneu@gmail.com">haozhouneu@gmail.com</a></strong>
-        </p>
+    </nav>
+    <div class="main-container">
+        <div class="introduction">
+            <h1>About This Project</h1>
+        </div>
+        <section class="instructions">
+            <p>
+                This platform is a proof-of-concept exploring the applications of artificial intelligence in image processing. 
+                The project investigates AI-driven techniques for analyzing and enhancing various types of images, including medical imaging, scientific visualizations, and general image-based data.  
+            </p>
+            <p>
+                The primary objective is to experiment with different AI models, evaluate their potential impact, and understand their limitations in real-world applications. 
+                While this is not a production-ready tool, it serves as a research initiative to explore the feasibility of AI in image analysis.
+            </p>
+            <p>
+                If you have any questions or would like to discuss collaborations, feel free to reach out at:  
+                <strong><a href="mailto:haozhouneu@gmail.com" style="color: var(--primary-color); text-decoration: none;">haozhouneu@gmail.com</a></strong>
+            </p>
+        </section>
     </div>
 </body>
 </html>

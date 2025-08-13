@@ -3,76 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battery Cell Radial Analysis</title>
+    <title>Battery Cell Radial Analysis (Old)</title>
+    <link rel="stylesheet" href="../styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            margin: 20px;
-            background-color: #007bff;
-            color: white;
-            border: 2px solid #0056b3;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        #images {
-            margin-top: 20px;
-        }
-        .img {
-            max-width: 90%; /* Scale images relative to the container */
-            width: 100%;     /* Ensure all images fill their containers */
-            height: auto;    /* Maintain aspect ratio */
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            display: block;
-            margin: 0 auto;
-        }
-        .button-image-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
-            margin-top: 20px;
-        }
-        .button-image-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        p {
-            font-size: 14px;
-            color: #333;
+        .api-images img {
+            max-width: 90%;
+            height: auto;
+            border-radius: 12px;
         }
     </style>
 </head>
 <body>
-<!-- Back to Main Page Button -->
-    <div style="text-align: center; margin-bottom: 20px;">
-        <button onclick="location.href='../index.html'" style="padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Back to Main Page</button>
-    </div>    <h1>Battery Cell Radial Analysis</h1>
-    <div id="images">
-        <p id="status"></p>
-        <p style="font-size: 18px">There are 500 test cases in total, each click will randomly select one image from the test set.</p>
-        <p style="color: red; font-size: 18px">Click the "Load Test Data" button first to load a test image. Then click the other two buttons to check the results.</p>
-        <div id="image-container" class="api-images">
-            <img src="./img.png" alt="Placeholder Image">
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="../index.html" class="home-button">Home</a>
+            <div class="dropdown">
+                <a href="#">Echocardiogram</a>
+                <div class="dropdown-content">
+                    <a href="../gan/gan.html">GAN</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <a href="#">CMR</a>
+                <div class="dropdown-content">
+                    <a href="../gan/gan.html">GAN</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <a href="#">Battery-CT</a>
+                <div class="dropdown-content">
+                    <a href="../gan/pairgan-battery.html">PairGAN</a>
+                    <a href="./battery-radial.html">Radial Analysis</a>
+                    <a href="./battery-axial.html">Axial Analysis</a>
+                </div>
+            </div>
+            <a href="../about/index.html">About</a>
         </div>
-        <button onclick="triggerLambda()">Load Test Data</button>
-    </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="introduction">
+            <h1>Battery Cell Radial Analysis (Old)</h1>
+        </div>
+        <div id="images">
+            <p id="status" style="color: rgb(15, 11, 224); font-size: 16px"></p>
+            <section class="instructions">
+                <p>There are 500 test cases in total, each click will randomly select one image from the test set.</p>
+                <p style="color: red;">Click the "Load Test Data" button first to load a test image. Then click the other two buttons to check the results.</p>
+            </section>
+            <div id="image-container" class="api-images">
+                <img src="./img.png" alt="Placeholder Image">
+            </div>
+            <button onclick="triggerLambda()">Load Test Data</button>
+        </div>
 
     <div id="radial-analysis">
         <div class="button-image-row">
@@ -85,6 +68,7 @@
                 <button id="run-unet-button" onclick="showUnetImage()" disabled>Run U-net</button>
             </div>
         </div>
+    </div>
     </div>
 
     <script>
